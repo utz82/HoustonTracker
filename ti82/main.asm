@@ -17,73 +17,80 @@ begin
 ;Setting up the initial screen
 ;***********************************************************************************			
 			
-init		ROM_CALL(CLEAR_DISP)
+init		
+			ROM_CALL(CLEAR_DISP)
 
-			xor a				;clear buffers and pointers
+			xor a			;clear buffers and pointers
 			ld b,14
 			ld hl,intbuf1
-clrploop	ld (hl),a
+clrploop	
+			ld (hl),a
 			inc hl
 			djnz clrploop
 			
 			inc hl
-			ld (hl),$0e			;setup initial cursor position
+			ld (hl),$0e		;setup initial cursor position
 			inc hl
 			ld (hl),$02
 
-			ld hl,sdata			;initialize pointer to song data position
+			ld hl,sdata		;initialize pointer to song data position
 			ld (sngpnt),hl		;internal pseudo-interrupt restart point
-restart		ld de,$0240			;print SPEED display
+restart		
+			ld de,$0240		;print SPEED display
 			ld (GRAF_CURS),de	;setup print position
 			ld hl,spdmsg
-			call dzmstr			;display "SPEED"
-			ld de,$0840			;print ENGINE display
+			call dzmstr		;display "SPEED"
+			ld de,$0840		;print ENGINE display
 			ld (GRAF_CURS),de	;setup print position
 			ld hl,engmsg
-			call dzmstr			;display "ENGINE"
-			ld de,$0e40			;print channel mute display
+			call dzmstr		;display "ENGINE"
+			ld de,$0e40		;print channel mute display
 			ld hl,chnmsg
-			call dlmde			;display "CH "
+			call dlmde		;display "CH "
 			ld a,(chmask)
 			call chmaskp
 			
 			ld a,(spdpnt)		;load speed value
 			call num2hex		;convert to character codes and store in (numfld)
-			ld de,$0257			;setup print pos
-			call nfstde			;display speed value
+			ld de,$0257		;setup print pos
+			call nfstde		;display speed value
 			
 			ld a,(engpnt)		;load engine value
 			call num2hex		;convert to character codes and store in (numfld)
-			ld de,$085b			;setup print pos
+			ld de,$085b		;setup print pos
 			ld (GRAF_CURS),de	
 			call nfmch
 			
-setmenu		ld de,$1444			;setup print pos
-			ld c,7				;setup loop counter
+setmenu		
+			ld de,$1444		;setup print pos
+			ld c,7			;setup loop counter
 			ld hl,menumsg
-dmloop		ld a,6				;setup print adjustment
-			call dlmde			;print length-indexed string
-			add a,d				;update it
+dmloop		
+			ld a,6			;setup print adjustment
+			call dlmde		;print length-indexed string
+			add a,d			;update it
 			ld d,a
-			dec c				;printing 7 lines, count down
+			dec c			;printing 7 lines, count down
 			jr nz,dmloop
 
-			ld de,$0200			;setup print pos for pattern matrix
-			push de				;preserve it
+			ld de,$0200		;setup print pos for pattern matrix
+			push de			;preserve it
 			ld hl,(sngpnt)
 			
-			ld c,10				;counter for screen printing, printing 10 rows
+			ld c,10			;counter for screen printing, printing 10 rows
 			
-scrinit0						;calculate row numbers from position in song data
+scrinit0
+						;calculate row numbers from position in song data
 			ld (intbuf1),hl		;store temporary song data pointer
 
-			push bc				;store loop counter
+			push bc			;store loop counter
 			ccf
-			ld bc,sdata			;load song data start position
-			sbc hl,bc			;subtract it from current song data position
-			inc hl				;adjust +1
+			ld bc,sdata		;load song data start position
+			sbc hl,bc		;subtract it from current song data position
+			inc hl			;adjust +1
 
-skip3		call linediv
+skip3		
+			call linediv
 			ld h,b				;now bc holds the actual row number
 			ld l,c				;transfer it to hl
 
@@ -111,12 +118,14 @@ skip3		call linediv
 			jr nz,scrinit0		;repeat until 10 rows have been printed
 			
 			pop de				;clean stack
-reswitch	nop					;self-modifying switch, set to ret after internal restart
+reswitch	
+			nop					;self-modifying switch, set to ret after internal restart
 ;***************************************************************************
 ;Main key handler
 ;***************************************************************************			
 			
-readkeys	ld a,%11011111		;mask keys
+readkeys	
+			ld a,%11011111		;mask keys
 			out (1),a
 			in a,(1)			;read keyboard
 			rra
@@ -225,54 +234,75 @@ readkeys	ld a,%11011111		;mask keys
 			jp kskip1				;
 
 			
-keyD		ld a,$0d				;assign hex values
+keyD		
+			ld a,$0d				;assign hex values
 			jr imputjmp
-keyA		ld a,$0a
+keyA		
+			ld a,$0a
 			jr imputjmp
-key0		xor a
+key0		
+			xor a
 			jr imputjmp
-key1		ld a,$01
+key1		
+			ld a,$01
 			jr imputjmp
-key4		ld a,$04
+key4		
+			ld a,$04
 			jr imputjmp
-key7		ld a,$07
+key7		
+			ld a,$07
 			jr imputjmp
-keyE		ld a,$0E
+keyE		
+			ld a,$0E
 			jr imputjmp
-keyB		ld a,$0B
+keyB		
+			ld a,$0B
 			jr imputjmp
-key2		ld a,$02
+key2		
+			ld a,$02
 			jr imputjmp
-key5		ld a,$05
+key5		
+			ld a,$05
 			jr imputjmp
-key8		ld a,$08
+key8		
+			ld a,$08
 			jr imputjmp
-keyF		ld a,$0f
+keyF		
+			ld a,$0f
 			jr imputjmp
-keyC		ld a,$0c
+keyC		
+			ld a,$0c
 			jr imputjmp
-key3		ld a,$03
+key3		
+			ld a,$03
 			jr imputjmp
-key6		ld a,$06
+key6		
+			ld a,$06
 			jr imputjmp
-key9		ld a,$09
+key9			ld a,$09
 			
-imputjmp	jp inputv
+imputjmp	
+			jp inputv
 
-keySto		call rowtrns
+keySto		
+			call rowtrns
 			ld hl,mhxbuf+6
 			jr keyLcp
 
-keyLn		call rowtrns
+keyLn		
+			call rowtrns
 			ld hl,mhxbuf+3
 			jr keyLcp
 
-keyLog		call rowtrns
+keyLog		
+			call rowtrns
 			ld hl,mhxbuf
-keyLcp		call copynum
+keyLcp		
+			call copynum
 			jr kskip2
 
-rowtrns		push de
+rowtrns		
+			push de
 			call chkstart
 			ld (intbuf1),hl		;store temporary song data pointer
 			
@@ -285,7 +315,8 @@ rowtrns		push de
 			pop de
 			ret
 			
-copynum		ld a,b
+copynum		
+			ld a,b
 			ld (hl),a
 			inc hl
 			ld a,c
@@ -301,20 +332,25 @@ copynum		ld a,b
 			ld (hl),a
 			ret
 			
-keyNeg		call chkstart			;play from position
+keyNeg		
+			call chkstart			;play from position
 			jr cplay
 			
-keyDot		call chkstart			;play current row
+keyDot		
+			call chkstart			;play current row
 			ld de,pbuf				;load pointer to temporary player buffer
 			ld b,5
 			ld a,(chmask)
 			ld c,a
-chmtsk0		srl c
+chmtsk0		
+			srl c
 			jr nc,chmtsk1
 			xor a
 			jr chmtsk2
-chmtsk1		ld a,(hl)
-chmtsk2		ld (de),a
+chmtsk1		
+			ld a,(hl)
+chmtsk2		
+			ld (de),a
 			inc de
 			inc hl
 			djnz chmtsk0
@@ -327,7 +363,8 @@ chmtsk2		ld (de),a
 keyEnter							;play from start
 			ld hl,sdata
 
-cplay		ld a,(hl)
+cplay		
+			ld a,(hl)
 			cpl
 			or a
 			jr z,cpskp
@@ -338,22 +375,28 @@ cplay		ld a,(hl)
 			call z,player2
 			dec a
 			call z,player3
-cpskp		ld a,$c0				;revert code modifications
+cpskp		
+			ld a,$c0				;revert code modifications
 			ld (pex),a
 			xor a
 			ld (t5pex),a
 			ld (t7pex),a
 
-kskip1		call csrset
-kskip2		jp readkeys
+kskip1		
+			call csrset
+kskip2		
+			jp readkeys
 
-keyDown		call csrdel
+keyDown		
+			call csrdel
 			call rowinc
 			jr kskip1				;print cursor
-keyUp		call csrdel
+keyUp		
+			call csrdel
 			call rowdec
 			jr kskip1
-keyLeft		call csrdel
+keyLeft		
+			call csrdel
 			ld a,(colval)			;check what column is currently active
 			or a					;if it is the leftmost column...
 			jr z,kskip1				;... ignore keypress
@@ -361,7 +404,8 @@ keyLeft		call csrdel
 			call nc,dcoldec			;... shift cursor an extra 2 pixels and switch column
 			call coldec				;update cursor position
 			jr kskip1
-keyRight	call csrdel
+keyRight	
+			call csrdel
 			ld a,(colval)			;check what column is currently active
 			cp 9					;if it is the rightmost column...
 			jr z,kskip1				;... ignore keypress
@@ -370,18 +414,22 @@ keyRight	call csrdel
 			call colinc				;update cursor position
 			jr kskip1
 			
-keyPlus		ld a,(spdpnt)			;increase speed value
+keyPlus		
+			ld a,(spdpnt)			;increase speed value
 			cp $fe
 			jr z,ppret
 			inc a
 			ld (spdpnt),a
-ppret		jr pmret
+ppret		
+			jr pmret
 
-keyMinus	ld a,(spdpnt)			;decrease speed value
+keyMinus	
+			ld a,(spdpnt)			;decrease speed value
 			dec a					;if a=1
 			jr z,qret				;do nothing
 			ld (spdpnt),a
-pmret		ld bc,(numfld)
+pmret		
+			ld bc,(numfld)
 			res 3,(iy+$05)
 			call num2hex
 			ld de,$0257
@@ -389,20 +437,24 @@ pmret		ld bc,(numfld)
 			ld (numfld),bc
 			call kdelay
 			set 3,(iy+$05)
-qret		jp readkeys
+qret		
+			jp readkeys
 
-keyMult		ld a,(engpnt)
+keyMult		
+			ld a,(engpnt)
 			cp 3
 			jr z,kddret
 			inc a
 			ld (engpnt),a
 			jr kddret
-keyDiv		ld a,(engpnt)
+keyDiv		
+			ld a,(engpnt)
 			cp 1
 			jr z,kddret
 			dec a
 			ld (engpnt),a
-kddret		ld bc,(numfld)
+kddret		
+			ld bc,(numfld)
 			res 3,(iy+$05)
 			call num2hex
 			ld de,$085b
@@ -413,16 +465,18 @@ kddret		ld bc,(numfld)
 			set 3,(iy+$05)
 			jr keymenx
 
-keyMenu		call dispmenu
-keymenx		jp readkeys
+keyMenu			call dispmenu
+keymenx			jp readkeys
 
-keyZoom		call chkstart			;copy current row to buffer
+keyZoom		
+			call chkstart			;copy current row to buffer
 			ld de,pbuf				;load pointer to temporary player buffer
 			ld bc,$0005				;loop counter
 			ldir
 			jr keymenx
 
-keyTrace	call chkstart
+keyTrace	
+			call chkstart
 			push hl
 			ld de,pbuf
 			ex de,hl
@@ -436,37 +490,45 @@ keyTrace	call chkstart
 			call nlinity
 			jr keymenx
 
-keyQcopy	call qinit
+keyQcopy	
+			call qinit
 			call kdelay
 			call mcopy
 			jr keymenx
 
-keyQcut		call qinit
+keyQcut		
+			call qinit
 			call mcut
 			jr keymenx
 			
-keyMute		ld a,(colval)			;check current cursor position
+keyMute		
+			ld a,(colval)			;check current cursor position
 			ld c,$01				;mask for xor'ing against channel mute mask (chmask)
 			srl a					;colval/2 = data column currently being edited
 			jr z,kmsx
 			
-kmloop		sla c					;rotate mask
+kmloop		
+			sla c					;rotate mask
 			dec a
 			jr nz,kmloop
 			
-kmsx		ld a,(chmask)
+kmsx		
+			ld a,(chmask)
 			xor c
-kmsret		call chmaskp
+kmsret		
+			call chmaskp
 			call kdelay
 			call kdelay
 			jp readkeys
 
-chmaskp		ld (chmask),a
+chmaskp		
+			ld (chmask),a
 			ld hl,chnmsg+3
 			ld de,$0e4b
 			ld (GRAF_CURS),de
 			ld b,5
-kmploop		set 3,(iy+$05)			;print inverse
+kmploop		
+			set 3,(iy+$05)			;print inverse
 			srl a
 			call c,kmswitch
 			push af
@@ -475,10 +537,12 @@ kmploop		set 3,(iy+$05)			;print inverse
 			pop af
 			inc hl
 			djnz kmploop	
-kmswitch	res 3,(iy+$05)
+kmswitch	
+			res 3,(iy+$05)
 			ret		
 			
-qinit		ld a,$c9				;modify code, so we can call mhand instead of jumping to it
+qinit		
+			ld a,$c9				;modify code, so we can call mhand instead of jumping to it
 			ld (mhdqex),a
 			call mhand
 			xor a
@@ -492,7 +556,8 @@ qinit		ld a,$c9				;modify code, so we can call mhand instead of jumping to it
 ;Hexadecimal Input Routine
 ;***********************************************************************
 		
-inputv		ld d,a					;input hex nibble
+inputv		
+			ld d,a					;input hex nibble
 			push de
 			call csrdel				;delete cursor
 			pop de
@@ -510,17 +575,20 @@ inputv		ld d,a					;input hex nibble
 			add a,a
 			jr inputf
 
-input1		ld a,(hl)				;load pointer
+input1		
+			ld a,(hl)				;load pointer
 			or $0f					;clear lower nibble
 			xor $0f
 			ld e,a					;preserve in e
 			ld a,d					;load inputval
 
-inputf		add a,e						
+inputf		
+			add a,e						
 			ld (hl),a				;load data pointer with new value
 			call num2hex
 
-rowswitch	ld a,(colval)			;update row value pointer
+rowswitch	
+			ld a,(colval)			;update row value pointer
 			rra
 			jr nc,norowup
 			ld hl,(csrpos)
@@ -528,42 +596,49 @@ rowswitch	ld a,(colval)			;update row value pointer
 			call nfmch			
 			call coldec
 			call rowinc
-rowf		call csrset
+rowf		
+			call csrset
 			call kdelay
 			call kdelay
 			jp readkeys
-norowup		ld hl,(csrpos)
+norowup		
+			ld hl,(csrpos)
 			ld (GRAF_CURS),hl
 			ld a,(numfld)    		;Offset of the string
 			call mcharput 			;Display the string
 			call colinc
 			jr rowf
 
-dcolinc		ld a,(csrpos)
+dcolinc		
+			ld a,(csrpos)
 			add a,2
 			ld (csrpos),a
 			ld hl,(sngpnt)			;
 			inc hl
 			jr dcex
 			
-colinc		ld a,(csrpos)
+colinc		
+			ld a,(csrpos)
 			add a,4
 			ld (csrpos),a
 			ld a,(colval)
 			inc a
 			jr cex
 			
-dcoldec		ld a,(csrpos)			;look up current cursor position
+dcoldec		
+			ld a,(csrpos)			;look up current cursor position
 			sub 2					;shift left 2 pixels
 			ld (csrpos),a			;update cursor position
 			ld hl,(sngpnt)			;update song data pointer
 			dec hl
-dcex		ld (sngpnt),hl
+dcex		
+			ld (sngpnt),hl
 			ld a,(hl)				;
 			call num2hex			;
 			ret
 			
-coldec		ld a,(csrpos)
+coldec		
+			ld a,(csrpos)
 			sub 4
 			ld (csrpos),a
 			ld a,(colval)
@@ -571,13 +646,15 @@ coldec		ld a,(csrpos)
 cex			ld (colval),a
 			ret
 			
-rowinc		ld a,(csrpos+1)			;look up current cursor position
+rowinc		
+			ld a,(csrpos+1)			;look up current cursor position
 			cp 56					;see if we have reached the bottom of the screen
 			jr nz,rskip1
 			call scrlup				;if so, scroll
 			ret
 
-rskip1		add a,6					;update cursor position
+rskip1		
+			add a,6					;update cursor position
 			ld (csrpos+1),a
 			ld hl,(sngpnt)			;update song data pointer
 			ld de,$0005
@@ -585,13 +662,15 @@ rskip1		add a,6					;update cursor position
 			ld (sngpnt),hl
 			ret
 
-rowdec		ld a,(csrpos+1)			;look up current cursor position
+rowdec		
+			ld a,(csrpos+1)			;look up current cursor position
 			cp $02					;see if we have reached the top the screen
 			jr nz,rskip2
 			call scrldown
 			ret
 			
-rskip2		sub 6					;update cursor position
+rskip2		
+			sub 6					;update cursor position
 			ld (csrpos+1),a
 			ld hl,(sngpnt)			;update song data pointer
 			ld de,$0005
@@ -603,7 +682,8 @@ rskip2		sub 6					;update cursor position
 ;scrolling routines		
 ;*********************************************************************			
 			
-scrlup		ld hl,(sngpnt)			;check if we're at the last line of song data
+scrlup		
+			ld hl,(sngpnt)			;check if we're at the last line of song data
 			push hl
 			ld de,sdend-5				
 			sbc hl,de
@@ -634,7 +714,8 @@ grcopy
 			ret
 
 			
-scrldown	ld hl,(sngpnt)			;check if we're at the first line of song data
+scrldown	
+			ld hl,(sngpnt)			;check if we're at the first line of song data
 			push hl
 			ld de,sdata+5				
 			sbc hl,de
@@ -663,7 +744,8 @@ grcopy1
 			call newline			
 			ret	
 
-backupdsp	ld (sngpnt),hl
+backupdsp	
+			ld (sngpnt),hl
 			ROM_CALL(BACKUP_DISP)	;copy current screen to GRAPH_MEM
 			ld bc,768
 			ld hl,APD_BUF
@@ -674,23 +756,32 @@ backupdsp	ld (sngpnt),hl
 ;*********************************************************************
 ;various calls to ROM_CALLs
 ;*********************************************************************			
-nfstde		ld (GRAF_CURS),de
-nfstr		ld hl,numfld
-dzmstr		ROM_CALL(D_ZM_STR)
+nfstde		
+			ld (GRAF_CURS),de
+nfstr		
+			ld hl,numfld
+dzmstr		
+			ROM_CALL(D_ZM_STR)
 			ret
-dlmde		ld (GRAF_CURS),de
-dlm3		ld b,3			
-dlmstr		ROM_CALL(D_LM_STR)
+dlmde		
+			ld (GRAF_CURS),de
+dlm3		
+			ld b,3			
+dlmstr		
+			ROM_CALL(D_LM_STR)
 			ret
-nfmch		ld a,(numfld+1)
-mcharput	ROM_CALL(M_CHARPUT)
+nfmch		
+			ld a,(numfld+1)
+mcharput	
+			ROM_CALL(M_CHARPUT)
 			ret
 
 			
 ;*********************************************************************
 ;routine for printing a single line of song data
 ;*********************************************************************
-newline		push de
+newline		
+			push de
 			call chkstart
 			ld (intbuf1),hl		;store temporary song data pointer
 			ccf
@@ -698,7 +789,8 @@ newline		push de
 			sbc hl,de			;subtract it from current song data position
 			inc hl				;adjust +1
 
-skipnl		call linediv		;now bc holds the actual line #
+skipnl		
+			call linediv		;now bc holds the actual line #
 
 			ld a,b				;convert MSB to character code
 			call num2hex		;and store in text buffer
@@ -711,7 +803,8 @@ skipnl		call linediv		;now bc holds the actual line #
 			add a,e
 			ld e,a
 			ld a,c				;convert LSB of row number to character code
-nlinitx		push de				;preserve printing position
+nlinitx		
+			push de				;preserve printing position
 			call num2hex
 			pop de				;retrieve printing positon
 			call nfstde			;display LSB of row number
@@ -722,8 +815,10 @@ nlinitx		push de				;preserve printing position
 			push de				;preserve printing position
 			ld hl,(intbuf1)		;retrieve temporary song data pointer
 
-nlinit0		ld b,5				;load loop counter to print five columns
-nlinit1		ld a,(hl)			;load note byte
+nlinit0		
+			ld b,5				;load loop counter to print five columns
+nlinit1		
+			ld a,(hl)			;load note byte
 			call num2hex		;convert to hex
 			pop de				;setup print pos
 			ld (GRAF_CURS),de
@@ -740,18 +835,22 @@ nlinit1		ld a,(hl)			;load note byte
 			pop de				;clean up stack
 			ret
 
-nlinity		push de
+nlinity		
+			push de
 			jr nlinit0
 			
 ;*********************************************************************
 ;cursor printing routine
 ;*********************************************************************
 			
-csrset		set 3,(iy+$05)			;print inverted
+csrset		
+			set 3,(iy+$05)			;print inverted
 			call kdelay
 			jr csrprint
-csrdel		res 3,(iy+$05)			;print normal
-csrprint	ld hl,(sngpnt)
+csrdel		
+			res 3,(iy+$05)			;print normal
+csrprint	
+			ld hl,(sngpnt)
 			ld a,(hl)				;restore from cursor
 			call num2hex
 			ld de,(csrpos)
@@ -763,12 +862,14 @@ csrprint	ld hl,(sngpnt)
 			jr nc,csrf
 			ld a,(numfld+1)			;if we're at an odd row, load char code of 2nd nibble
 			ld b,a
-csrf		ld a,b
+csrf			ld a,b
 			call mcharput
 			ret
 			
-kdelay		ld bc,$3000				;delay loop to prevent accidental key repeat
-kdloop		ld hl,$0000				
+kdelay		
+			ld bc,$3000				;delay loop to prevent accidental key repeat
+kdloop		
+			ld hl,$0000				
 			push hl
 			pop hl
 			dec bc
@@ -781,11 +882,13 @@ kdloop		ld hl,$0000
 ;determine row start point
 ;**********************************************************************
 
-chkstart	ld a,(colval)			;load current column value
+chkstart	
+			ld a,(colval)			;load current column value
 			bit 0,a
 			jr z,chk1
 			dec a
-chk1		srl a					;divide by 2
+chk1		
+			srl a					;divide by 2
 			ld c,a					;preserve in c
 			ld b,0					;clear b (just to be sure)
 			ld hl,(sngpnt)			;load current pointer to song data
@@ -798,7 +901,8 @@ chk1		srl a					;divide by 2
 ;menu subroutine
 ;**********************************************************************
 
-dispmenu	call csrdel				;delete normal cursor
+dispmenu	
+			call csrdel				;delete normal cursor
 
 			set 3,(iy+$05)			;print inverted
 			ld de,$1444
@@ -809,7 +913,8 @@ dispmenu	call csrdel				;delete normal cursor
 			call kdelay
 			call kdelay
 			
-rkmenu		ld hl,menumsg			;reset initial string pointer
+rkmenu		
+			ld hl,menumsg			;reset initial string pointer
 			ld de,$1444				;reset initial print position
 			res 3,(iy+$05)			;printing flag normal
 			ld a,%11111100			;mask keys... reading 2 rows *oops
@@ -828,35 +933,43 @@ rkmenu		ld hl,menumsg			;reset initial string pointer
 			jr nc,mkeyM
 			jr rkmenu				;continue reading keys
 			
-menexit		call mkdsx
-mrexit		call csrset				;print normal cursor
+menexit		
+			call mkdsx
+mrexit		
+			call csrset				;print normal cursor
 			ret						;return to global keyhandler
 
-mkeyM		call mhand
+mkeyM		
+			call mhand
 			or a
 			jr nz,mrexit			;if Jump was executed, return to global keyhandler immediately
 			jr mkex					;else, do a short delay and continue reading keys
 			
-mkeyUp		call mkdsx				;delete cursor
+mkeyUp		
+			call mkdsx				;delete cursor
 			dec a					;decrement cursor position
 			cp $ff					;if < 0
 			jr nz,mkdsk				;go print
 			ld a,6					;else, cursor pos = 6
 			jr mkdsk				;go print
 			
-mkeyDown	call mkdsx				;delete cursor
+mkeyDown	
+			call mkdsx				;delete cursor
 			inc a					;increase cursor position
 			cp 7					;if <7
 			jr nz,mkdsk				;go print
 			xor a					;else, cursor pos = 0, go print
 			
-mkdsk		ld (pbuf),a				;update menu pos buffer
+mkdsk		
+			ld (pbuf),a				;update menu pos buffer
 			set 3,(iy+$05)			;print inverted
 			call mkdsx				;call printing subroutine
-mkex		call kdelay
+mkex		
+			call kdelay
 			jr rkmenu				;return to menu keyhandler
 
-mkdsx		ld a,(pbuf)				;read menu position buffer
+mkdsx		
+			ld a,(pbuf)				;read menu position buffer
 			or a					;if menu pos = 0
 			jr z,mxpri				;we already have correct printing pos, so print
 			
@@ -864,7 +977,8 @@ mkdsx		ld a,(pbuf)				;read menu position buffer
 			ld b,a					;load menu pos to counter
 			xor a					;a=0
 			ld l,a					;l=0
-mlp1		add a,6					;
+mlp1		
+			add a,6					;
 			djnz mlp1				;repeat (menu pos) times
 			ld h,a					
 			add hl,de				;add offset 
@@ -873,35 +987,43 @@ mlp1		add a,6					;
 			ld a,(pbuf)				;read menu pos from buffer
 			ld b,a					;load to counter
 			xor a					;a=0
-mlp2		add a,3					;
+mlp2		
+			add a,3					;
 			djnz mlp2				;repeat (menu pos) times
 			ld c,a					;c = offset, b = 0
 			add hl,bc				;add offset to string pointer
 
-mxpri		call dlmde				;print length-indexed string at pointer
+mxpri		
+			call dlmde				;print length-indexed string at pointer
 			ld a,(pbuf)				;load menu pos from buffer
 			ld hl,menumsg
 			ld de,$1444
 			ret						;and that's it
 
 ;************************************************************************
-mhand		ROM_CALL(BACKUP_DISP)	;copy current screen to APD_BUF
+mhand		
+			ROM_CALL(BACKUP_DISP)	;copy current screen to APD_BUF
 			call restdisp			;copy APD_BUF to GRAPH_MEM
-mhand1		ld hl,GRAPH_MEM + 516 + 48
+mhand1		
+			ld hl,GRAPH_MEM + 516 + 48
 			ld b,12
 			ld a,$ff
-mllloop		ld (hl),a				;draw a line
+mllloop		
+			ld (hl),a				;draw a line
 			inc hl
 			djnz mllloop
 			ld b,214 -48
 			xor a
-mblloop		ld (hl),a				;blank the lowest two rows
+mblloop		
+			ld (hl),a				;blank the lowest two rows
 			inc hl
 			djnz mblloop
 			call CR_GRBCopy
-mhdqex		nop
+mhdqex		
+			nop
 			
-mmkhd		ld a,%11111101			;mask keys... 
+mmkhd		
+			ld a,%11111101			;mask keys... 
 			out (1),a
 			in a,(1)				
 			bit 6,a					;read CLEAR key
@@ -913,7 +1035,8 @@ mmkhd		ld a,%11111101			;mask keys...
 			jr nc,mconfirm
 			jr mmkhd			
 
-mmexit		call restdisp			;restore main view
+mmexit		
+			call restdisp			;restore main view
 			call CR_GRBCopy
 			call kdelay				;wait a bit to prevent accidental keypress
 			ld a,$03				;revert potential code modification
@@ -922,7 +1045,8 @@ mmexit		call restdisp			;restore main view
 			ld (mhxcmode),a			;reset copy mode
 			ret						;and back to global keyhandler
 
-mconfirm	ld a,(pbuf)				;determine menu position
+mconfirm	
+			ld a,(pbuf)				;determine menu position
 			ld de,$3201				;setup printing position used by mhexkhd subroutine
 			ld (GRAF_CURS),de
 			or a					;determine which function to execute
@@ -939,7 +1063,8 @@ mconfirm	ld a,(pbuf)				;determine menu position
 			jp z,msave
 			jp mswap
 			
-mjump		ld hl,menumsg			;jump to line routine - load pointer to "JMP"
+mjump		
+			ld hl,menumsg			;jump to line routine - load pointer to "JMP"
 			call dlm3				;print it
 			ld hl,msto				;load pointer to " TO:"
 			call dzmstr				;print it
@@ -950,17 +1075,20 @@ mjump		ld hl,menumsg			;jump to line routine - load pointer to "JMP"
 			ld hl,err3				;load pointer to "[Y=] CONFIRM  [CLEAR] ABORT"
 			call dzmstr				;print it
 			pop de					;get back our print pos for hex input
-mjmpkhd		ld a,3					;need to input 3 hex digits
+mjmpkhd		
+			ld a,3					;need to input 3 hex digits
 			ld hl,mhxbuf+6
 			call mhexkhd			;call hex input routine
 			or a					;if it returns with a=0
 			jr z,mmexit				;then user pressed [CLEAR]
 
-mjmpinit	ld hl,mhxbuf+6
+mjmpinit	
+			ld hl,mhxbuf+6
 			call hex2ln
 			call rowadjust
 			ld (sngpnt),hl			;now we know where to jump to in RAM
-mjmpexit	ld a,$c9				;otherwise
+mjmpexit	
+			ld a,$c9				;otherwise
 			ld (reswitch),a			;modify code
 			ld de,$020e				;preserve cursor position - don't think it's actually necessary
 			ld (csrpos),de
@@ -973,7 +1101,8 @@ mjmpexit	ld a,$c9				;otherwise
 			ret						;main keyhandler
 
 			
-mcopy		ld hl,menumsg+3
+mcopy		
+			ld hl,menumsg+3
 			call dlm3
 			ld hl,msfrom
 			call dzmstr
@@ -1004,11 +1133,13 @@ mcopy		ld hl,menumsg+3
 			cp 2
 			jp z,mpast
 			
-minsert		ld hl,cmsg3
+minsert		
+			ld hl,cmsg3
 			call pastprep
 
 			
-mimovdat	push bc					;move consecutive data down to make room for insert
+mimovdat	
+			push bc					;move consecutive data down to make room for insert
 			push hl
 			push de
 			
@@ -1024,7 +1155,8 @@ mimovdat	push bc					;move consecutive data down to make room for insert
 			sbc hl,de				;now start point for move in hl
 			pop de
 			
-mimov		ld a,(hl)				;move down byte
+mimov		
+			ld a,(hl)				;move down byte
 			ld (de),a
 
 			xor a					;delete original source
@@ -1043,7 +1175,8 @@ mimov		ld a,(hl)				;move down byte
 			pop de
 			pop hl
 
-miblkadj	ld a,(mvsect)			;adjust start/end points if source blk was moved
+miblkadj	
+			ld a,(mvsect)			;adjust start/end points if source blk was moved
 			or a
 			jr z,mipast
 			ld bc,(intbuf1)
@@ -1052,19 +1185,22 @@ miblkadj	ld a,(mvsect)			;adjust start/end points if source blk was moved
 			ex de,hl
 			add hl,bc
 
-mipast		pop bc
+mipast		
+			pop bc
 			ld a,(mvsect)			;the everlasting target row problem
 			or a
 			jr z,mipstsk
 			inc de
 			inc hl
-mipstsk		ex de,hl				;now hl=start pos, de=end pos
+mipstsk		
+			ex de,hl				;now hl=start pos, de=end pos
 
 			push hl					;paste source to target
 			jp mpclpp
 			
 			
-mcut		xor a
+mcut		
+			xor a
 			ld (mhxcmode),a
 			ld hl,menumsg+6
 			call dlm3
@@ -1105,36 +1241,42 @@ mcut		xor a
 			ld bc,$0005
 			add hl,bc
 			push de
-mccutlp		ld a,(hl)
+mccutlp		
+			ld a,(hl)
 			ld (de),a
 			inc hl
 			inc de
 			cp $ff
 			jr nz,mccutlp
-mccutlp2	ld a,(de)
+mccutlp2	
+			ld a,(de)
 			cp $ff
 			jr z,mccskp1
 			xor a
 			ld (de),a
 			inc de
 			jr mccutlp2
-mccskp1		xor a
+mccskp1		
+			xor a
 			ld (de),a
 			pop hl
 			jp mjmpinit
 
-mpast		ld hl,cmsg2
+mpast		
+			ld hl,cmsg2
 			call pastprep
 			ex de,hl				;now hl=start pos, de=end pos
 			push hl
 
 			
-mpclpp		exx						;to register set 2
+mpclpp		
+			exx						;to register set 2
 			ld b,5					;counter to b'
 			ld a,(chmask)			;channel mute mask to c'
 			ld c,a
 			exx						;back to primary reg.set
-mpclpp0		ld hl,sdend
+mpclpp0		
+			ld hl,sdend
 			ccf
 			sbc hl,bc				;check if end of data block has been reached
 			jr c,mpdone				;if so, abort pasting
@@ -1149,10 +1291,12 @@ mpclpp0		ld hl,sdend
 			ld a,(chmask)			;restore chmask in c'
 			ld c,a
 			
-mpcms0		exx						;back to primary reg.set
+mpcms0		
+			exx						;back to primary reg.set
 			ld a,(hl)				;copy data byte
 			ld (bc),a
-mpcmskp		inc hl					;increment pointers
+mpcmskp		
+			inc hl					;increment pointers
 			inc bc
 			push hl
 mcpsw .EQU $				
@@ -1161,19 +1305,23 @@ mcpsw .EQU $
 			sbc hl,de				;check if end of copy block reached
 			jr nc,mpdone
 			jr mpclpp0				;if not, continue copying stuff
-mpdone		pop hl
+mpdone		
+			pop hl
 			jp mjmpinit
 
-mpcrev		dec b					;same as above, but skips copying
+mpcrev		
+			dec b					;same as above, but skips copying
 			jr nz,mpcrev0
 			ld b,5
 			ld a,(chmask)
 			ld c,a
-mpcrev0		exx						;back to primary reg.set
+mpcrev0		
+			exx						;back to primary reg.set
 			jr mpcmskp
 
 	
-mload		ld a,(slottab)			;check if at least one saveslot exists
+mload		
+			ld a,(slottab)			;check if at least one saveslot exists
 			or a
 			jr z,mdelx				;if not, abort			
 			xor a
@@ -1182,18 +1330,23 @@ mload		ld a,(slottab)			;check if at least one saveslot exists
 			ld (reswitch),a
 			jp mxrest2				;and restart Houston Tracker
 
-msave		ld a,1
-mlsj		call ldsav
-mdelx		call restdisp
+msave		
+			ld a,1
+mlsj		
+			call ldsav
+mdelx		
+			call restdisp
 			jp mmexit				;and we're done
 
-mswap		ld a,(slottab)			;check if at least one saveslot exists
+mswap		
+			ld a,(slottab)			;check if at least one saveslot exists
 			or a
 			jr z,mdelx				;if not, abort
 			ld a,2
 			jr mlsj
 
-mzap		ld hl,menumsg+9			;point to "ZAP"
+mzap		
+			ld hl,menumsg+9			;point to "ZAP"
 			call dlm3				;print it
 			ld hl,msall				;point to " ALL"
 			call mxsetup			;print the usual crap and modify hex keyhandler
@@ -1202,35 +1355,43 @@ mzap		ld hl,menumsg+9			;point to "ZAP"
 			jp z,mmexit				;if so, exit to menu keyhandler
 			ld a,$03				;revert code modification
 			ld (mhxswitch),a
-mzapx		ld a,$c9				;modify code
+mzapx		
+			ld a,$c9				;modify code
 			ld (reswitch),a
 			ld a,$ff				;put an end marker at the start of the song data
 			ld c,0
 			ld hl,sdata
 			ld (hl),a
-mzxloop		inc hl					;increase pointer
+mzxloop		
+			inc hl					;increase pointer
 			ld b,(hl)				;look up value at pointer
 			ld (hl),c				;write a $00 byte at pointer
 			cp b					;check if we have reached an end marker
 			jr z,mxrest				;if so, restart Houston Tracker
 			jr mzxloop				;if not... we gotta copy some more 0s
 			
-mxrest		ld hl,sdend				;restore permanent end marker
-mxrest1		ld (hl),a
-mxrest2		call init				;restart Houston Tracker
+mxrest		
+			ld hl,sdend				;restore permanent end marker
+mxrest1		
+			ld (hl),a
+mxrest2		
+			call init				;restart Houston Tracker
 			ld a,$00				;revert code modification
 			ld (reswitch),a
 			cpl						;set a=$ff so menu keyhandler knows it should exit to main keyhandler
 			ret						;and that's that.
 						
-restdisp	ld bc,768				;copy APD_BUF to GRAPH_MEM
+restdisp	
+			ld bc,768				;copy APD_BUF to GRAPH_MEM
 			ld hl,APD_BUF
 			ld de,GRAPH_MEM
 			ldir
 			ret
 
-mxsetup		call dzmstr		;print whatever was pointed to
-mxsetup2	ld de,$3801				;set print position to last line
+mxsetup		
+			call dzmstr		;print whatever was pointed to
+mxsetup2	
+			ld de,$3801				;set print position to last line
 			ld (GRAF_CURS),de		
 			ld hl,err3				;point to "[Y=] CONFIRM  [CLEAR] ABORT"
 			call dzmstr		;print it
@@ -1239,8 +1400,10 @@ mxsetup2	ld de,$3801				;set print position to last line
 			xor a
 			ret
 
-holdlp		push af					;row holding for engines
-holdllp		xor a						;keyhandler
+holdlp		
+			push af					;row holding for engines
+holdllp		
+			xor a						;keyhandler
 			out (1),a					;mask port with 0
 			in a,(1)					;read MODE key
 			cpl
@@ -1249,14 +1412,16 @@ holdllp		xor a						;keyhandler
 			pop af
 			ret
 			
-derowlp		dec hl						;row looping for engines
+derowlp		
+			dec hl						;row looping for engines
 			dec hl
 			dec hl
 			dec hl
 			dec hl
 			ret
 			
-rowadjust	push hl						;pointer adjustment for copy/cut
+rowadjust	
+			push hl						;pointer adjustment for copy/cut
 			push bc
 			call chkstart
 			ld (sngpnt),hl
@@ -1266,7 +1431,8 @@ rowadjust	push hl						;pointer adjustment for copy/cut
 			pop hl
 			ret
 
-pastprep	push hl						;preparations for copy/paste
+pastprep	
+			push hl						;preparations for copy/paste
 			call kdelay
 			pop hl
 			ld de,$3201
@@ -1276,7 +1442,8 @@ pastprep	push hl						;preparations for copy/paste
 			ld de,(GRAF_CURS)
 			push de
 			ld b,70
-mpcllp		ld a,$20
+mpcllp		
+			ld a,$20
 			call mcharput
 			djnz mpcllp
 			ld a,3
@@ -1315,13 +1482,15 @@ mpcllp		ld a,$20
 			inc hl
 			ret
 
-msgsetu		call dlm3				;print it
+msgsetu		
+			call dlm3				;print it
 			call mxsetup2			;print the usual crap and modify hex keyhandler
 			call mhexkhd			;call hex keyhandler (which now just reads [Y=] and [CLEAR]
 			or a					;check if user pressed [CLEAR]
 			ret
 
-;lslset		ld a,$03				;revert code modification
+;lslset		
+;			ld a,$03				;revert code modification
 ;			ld (mhxswitch),a
 ;			ld bc,10000				;swap 10000 bytes
 ;			ld hl,sdata
@@ -1369,11 +1538,14 @@ sbuf .EQU $
 spdmsg								;this is obvious ;)
 			.db "TEMPO",0
 
-engmsg		.db "ENGINE",0
+engmsg		
+			.db "ENGINE",0
 
-chnmsg		.db "CH D1234",0
+chnmsg		
+			.db "CH D1234",0
 
-menumsg		.db "JMP"
+menumsg		
+			.db "JMP"
 			.db "CPY"
 			.db "CUT"
 			.db "ZAP"
@@ -1381,28 +1553,43 @@ menumsg		.db "JMP"
 			.db "SAV"
 			.db "DEL"				;replace this with DEL later
 
-cmsg2		.db "PST"
-cmsg3		.db "INS"			
+cmsg2		
+			.db "PST"
+cmsg3		
+			.db "INS"			
 			
-msfrom		.db " FROM:",0
-msto		.db " TO:",0
-mslen		.db "LENGTH: ",0
-msall		.db " ALL",0
-msat		.db " AT:",0
+msfrom		
+			.db " FROM:",0
+msto		
+			.db " TO:",0
+mslen		
+			.db "LENGTH: ",0
+msall		
+			.db " ALL",0
+msat		
+			.db " AT:",0
 			
-err1		.db "FAIL: ",0
-err2d		.db "end <= start",0
-err2e		.db "target w/in source",0
-err3		.db $c1					;"[" is evaluated incorrectly by Crash
+err1		
+			.db "FAIL: ",0
+err2d		
+			.db "end <= start",0
+err2e		
+			.db "target w/in source",0
+err3		
+			.db $c1					;"[" is evaluated incorrectly by Crash
 			.db "Y=] CONFIRM   "
 			.db	$c1
 			.db "CLEAR] ABORT",0
 			
-;lsnew		.db "NEW "
-lsslot		.db "SLOT ",0
-lsfree		.db " B FREE",0			
+;lsnew		
+			.db "NEW "
+lsslot		
+			.db "SLOT ",0
+lsfree		
+			.db " B FREE",0			
 			
-cmsgpnt		nop
+cmsgpnt		
+			nop
 			nop
 			
 ;************************************************************************
@@ -1410,34 +1597,34 @@ cmsgpnt		nop
 ;************************************************************************
 
 mhexkhd						;Routine for handling hex input in menu functions
-.INCLUDE "txtrack/mhexkhd.asm"
+.INCLUDE "Housto~1/ti82/mhexkhd.asm"
 
 num2hex						;the number to character code converter
-.INCLUDE "txtrack/num2hex.asm"
+.INCLUDE "Housto~1/ti82/num2hex.asm"
 
 linediv						;the 16-bit division subroutine
-.INCLUDE "txtrack/linediv.asm"
+.INCLUDE "Housto~1/ti82/linediv.asm"
 
 hex2ln						;the ascii to line number converter
-.INCLUDE "txtrack/hex2ln.asm"
+.INCLUDE "Housto~1/ti82/hex2ln.asm"
 
 etrap						;the error trapping subroutine
-.INCLUDE "txtrack/etrap.asm"
+.INCLUDE "Housto~1/ti82/etrap.asm"
 
 ldsav						;the file manager subroutine
-.INCLUDE "txtrack/ldsav.asm"
+.INCLUDE "Housto~1/ti82/ldsav.asm"
 
 player						;engine 1 and drum routines
-.INCLUDE "txtrack/tim4.asm"	
+.INCLUDE "Housto~1/ti82/tim4.asm"	
 
 player2						;engine 2
-.INCLUDE "txtrack/tim5.asm"	
+.INCLUDE "Housto~1/ti82/tim5.asm"	
 
 player3						;engine 3
-.INCLUDE "txtrack/tim7.asm"	
+.INCLUDE "Housto~1/ti82/tim7.asm"	
 
 ;spl						;sample playback, unfinished
-;.INCLUDE "txtrack/smp.asm"
+;.INCLUDE "Housto~1/ti82/smp.asm"
 
 ;***********************************************************************
 ;song data buffer
@@ -1456,7 +1643,8 @@ sdata .EQU $
 #else			
 			.BLOCK	9999	;reserve space for song data
 #endif			
-sdend		.db	$ff			;song data end marker
+sdend		
+			.db	$ff			;song data end marker
 
 savebuf .EQU $
 #ifdef LIGHT
@@ -1464,5 +1652,6 @@ savebuf .EQU $
 #else
 			.BLOCK 10002
 #endif			
-saveend		.db $ff
+saveend		
+			.db $ff
 

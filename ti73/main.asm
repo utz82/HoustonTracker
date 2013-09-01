@@ -1420,31 +1420,31 @@ cmsgpnt		nop
 ;************************************************************************
 
 mhexkhd						;Routine for handling hex input in menu functions
-.INCLUDE "txtrack/mhexkhd.asm"
+.INCLUDE "Housto~1/ti73/mhexkhd.asm"
 
 num2hex						;the number to character code converter
-.INCLUDE "txtrack/num2hex.asm"
+.INCLUDE "Housto~1/ti73/num2hex.asm"
 
 linediv						;the 16-bit division subroutine
-.INCLUDE "txtrack/linediv.asm"
+.INCLUDE "Housto~1/ti73/linediv.asm"
 
 hex2ln						;the ascii to line number converter
-.INCLUDE "txtrack/hex2ln.asm"
+.INCLUDE "Housto~1/ti73/hex2ln.asm"
 
 etrap						;the error trapping subroutine
-.INCLUDE "txtrack/etrap.asm"
+.INCLUDE "Housto~1/ti73/etrap.asm"
 
 ldsav						;the file manager subroutine
-.INCLUDE "txtrack/ldsav.asm"
+.INCLUDE "Housto~1/ti73/ldsav.asm"
 
 player						;engine 1 and drum routines
-.INCLUDE "txtrack/tim4.asm"	
+.INCLUDE "Housto~1/ti73/tim4.asm"	
 
 player2						;engine 2
-.INCLUDE "txtrack/tim5.asm"	
+.INCLUDE "Housto~1/ti73/tim5.asm"	
 
 player3						;engine 3
-.INCLUDE "txtrack/tim7.asm"	
+.INCLUDE "Housto~1/ti73/tim7.asm"	
 
 ;***********************************************************************
 ;song data buffer

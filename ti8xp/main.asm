@@ -1,6 +1,6 @@
 #define TI83P
 ;#define LIGHT					;uncomment to compile the "light" version
-#include "ion.inc"
+#include "ion2.inc"
 
 
 	.ORG	progstart-2
@@ -1422,31 +1422,31 @@ cmsgpnt		nop
 ;************************************************************************
 
 mhexkhd						;Routine for handling hex input in menu functions
-.INCLUDE "txtrack/mhexkhd.asm"
+.INCLUDE "Housto~1/ti8xp/mhexkhd.asm"
 
 num2hex						;the number to character code converter
-.INCLUDE "txtrack/num2hex.asm"
+.INCLUDE "Housto~1/ti8xp/num2hex.asm"
 
 linediv						;the 16-bit division subroutine
-.INCLUDE "txtrack/linediv.asm"
+.INCLUDE "Housto~1/ti8xp/linediv.asm"
 
 hex2ln						;the ascii to line number converter
-.INCLUDE "txtrack/hex2ln.asm"
+.INCLUDE "Housto~1/ti8xp/hex2ln.asm"
 
 etrap						;the error trapping subroutine
-.INCLUDE "txtrack/etrap.asm"
+.INCLUDE "Housto~1/ti8xp/etrap.asm"
 
 ldsav						;the file manager subroutine
-.INCLUDE "txtrack/ldsav.asm"
+.INCLUDE "Housto~1/ti8xp/ldsav.asm"
 
 player						;engine 1 and drum routines
-.INCLUDE "txtrack/tim4.asm"	
+.INCLUDE "Housto~1/ti8xp/tim4.asm"	
 
 player2						;engine 2
-.INCLUDE "txtrack/tim5.asm"	
+.INCLUDE "Housto~1/ti8xp/tim5.asm"	
 
 player3						;engine 3
-.INCLUDE "txtrack/tim7.asm"	
+.INCLUDE "Housto~1/ti8xp/tim7.asm"	
 
 ;***********************************************************************
 ;song data buffer
