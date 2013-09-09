@@ -16,11 +16,14 @@ del Housto~1\ti82\main.lst >nul
 goto DDONE
 
 :73P
-tasm -80 -i -b Housto~1\ti73\main.asm houston.bin
+tasm -80 -i -b Housto~1\ti73\main.asm ht73.bin
 if errorlevel 1 goto ERRORS
-devpac83 houston
-del houston.73p > nul
-asm73 houston.83p
+devpac83 ht73
+del ht73.73p > nul
+asm73 ht73.83p
+copy ht73.73p houston.73p >nul
+del ht73.73p >nul
+del ht73.bin >nul
 goto DONE
 
 :8XP
@@ -28,7 +31,7 @@ echo #define TI83P >temp.z80
 type Housto~1\ti8xp\main.asm >>temp.z80
 tasm -80 -i -b temp.z80 ht.bin
 if errorlevel 1 goto ERRORS
-devpac83 ht.bin
+devpac83 ht
 copy ht.83p houston.8xp >nul
 del ht.83p > nul
 del ht.bin > nul
