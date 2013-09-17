@@ -5,9 +5,15 @@
 
 
 lsinit		push af
+
+#ifdef TI82
+				ROM_CALL(CLEAR_DISP)
+#else
 				bcall(_clrlcdf)
+#endif				
+				
 				ld de,$0253
-				ld (pencol),de
+				ld (GRAF_CURS),de
 				ld hl,menumsg+12
 lsfmode			or a					;determine fm-mode
 				jr z,lsmpri
@@ -22,7 +28,7 @@ lsmpri			call dlm3				;print fm-mode
 				ld a,(bc)
 				call num2hex
 				ld de,$0839
-				ld (pencol),de
+				ld (GRAF_CURS),de
 				call nfstr
 				dec bc
 				ld a,(bc)
@@ -38,7 +44,7 @@ lsmpri			call dlm3				;print fm-mode
 				ld hl,slottab			;setup slot list
 				ld b,$01				;b = slot #
 				ld de,$0204
-				ld (pencol),de
+				ld (GRAF_CURS),de
 				push de
 lstabplp			ld a,(hl)				;check if slot exists
 					ld d,a					;+if it doesn't, there will be 2 consecutive $00 bytes
@@ -62,7 +68,7 @@ lstabplp			ld a,(hl)				;check if slot exists
 				ld a,6
 				add a,d
 				ld d,a
-				ld (pencol),de
+				ld (GRAF_CURS),de
 					push de
 					jr lstabplp
 				
@@ -84,7 +90,7 @@ lskeyhdj		dec b
 				ld b,0				;set current slot # to 0
 				ld de,$0200
 				push de
-					ld (pencol),de
+					ld (GRAF_CURS),de
 					ld a,$05
 					call mcharput			;print cursor
 				pop de
@@ -117,7 +123,7 @@ lsDown			ld a,c					;check if max slot # reached
 				cp b
 				jr z,lskhdret			;if so, abort and return to keyhandler
 				inc b
-				ld (pencol),de
+				ld (GRAF_CURS),de
 					push de
 					ld a,$06			;delete cursor
 					call mcharput
@@ -127,7 +133,7 @@ lsDown			ld a,c					;check if max slot # reached
 				ld d,a
 					push de
 					ld a,$05
-					ld (pencol),de
+					ld (GRAF_CURS),de
 					call mcharput
 					pop de
 					
@@ -141,7 +147,7 @@ lsUp			xor a					;check if top of list reached
 				jr z,lskhdret			;if so, abort and return to keyhandler
 				dec b
 				
-					ld (pencol),de
+					ld (GRAF_CURS),de
 					push de
 					ld a,$06			;delete cursor
 					call mcharput
@@ -152,7 +158,7 @@ lsUp			xor a					;check if top of list reached
 				ld d,a
 					push de
 					ld a,$05
-					ld (pencol),de
+					ld (GRAF_CURS),de
 					call mcharput
 					pop de
 				
@@ -171,9 +177,15 @@ lsact		pop af					;check fm-mode and act accordingly
 
 lserror		ld hl,errls1
 lserror1		push hl
+
+#ifdef TI82
+				ROM_CALL(CLEAR_DISP)
+#else
 				bcall(_clrlcdf)
+#endif
+
 				ld de,$0200
-				ld (pencol),de
+				ld (GRAF_CURS),de
 				call errsm				;print "FAIL: "
 				pop hl
 			call errwait			;print error message and display it for a few seconds
@@ -262,7 +274,7 @@ tabpos .EQU $+2
 			ld (slottab),de			;save block end to slot table
 			ld de,$0200
 			ld hl,errls3			;print "Success!"
-			ld (pencol),de
+			ld (GRAF_CURS),de
 			call errwait
 			ret
 			

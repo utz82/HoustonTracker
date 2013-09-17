@@ -2,17 +2,24 @@
 cd ..
 @echo off
 if %target% == ti82 goto 82P
+if %target% == r196 goto R196
 if %target% == ti83 goto 83P
 if %target% == ti8xp goto 8XP
 if %target% == ti73 goto 73P
 pause
 
+:R196
+echo 'Building for TI82 Parcus/ROM 19.006'
+echo #define R196 >temp.z80
 :82P
-tasm -80 -B -Q -R16 Housto~1\ti82\main.asm houston.obj
+echo #define TI82 >>temp.z80
+type Housto~1\merged\main.asm >>temp.z80
+tasm -80 -B -Q -R16 temp.z80 houston.obj
 if errorlevel 1 goto ERRORS
 CRPRGM82 HOUSTON.OBJ
 del HOUSTON.OBJ >nul
-del Housto~1\ti82\main.lst >nul
+del temp.z80 >nul
+del temp.lst >nul
 goto DDONE
 
 :73P
@@ -39,7 +46,7 @@ goto DONE
 
 :83P
 echo #define TI83 >temp.z80
-type Housto~1\ti83\main.asm >>temp.z80
+type Housto~1\merged\main.asm >>temp.z80
 tasm -80 -i -b temp.z80 houston.bin
 if errorlevel 1 goto ERRORS
 devpac83 houston

@@ -18,19 +18,15 @@
 			sla a
 			add a,e
 			ld e,a
-#ifdef LIGHT
-			ld hl,$03de
-#else			
-			ld hl,$0636				;highest line we can jump to = $636
-#endif			
+
+			ld hl,MAXL
+
 			ccf						;?
 			sbc hl,de				;check if user is trying to jump to a higher line
 			jr nc,mxx1				;if not, proceed
-#ifdef LIGHT			
-			ld de,$03de
-#else
-			ld de,$0636				;if yes, make sure we jump to $636 instead
-#endif			
+
+			ld de,MAXL
+		
 			ld a,d
 			pop hl
 			push hl
@@ -42,7 +38,7 @@
 			ld a,$0c
 			dec hl
 			ld (hl),a
-mxx1		pop hl
+mxx1			pop hl
 			ld h,d					;now multiply row number by 5
 			ld l,e
 			add hl,hl
